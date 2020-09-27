@@ -1,4 +1,4 @@
-# Samples Repository
+# Samples
 
 ## ServiceBus Message Sessions
 
