@@ -94,14 +94,11 @@ namespace SbMessageSessionsConsoleApp
                 return;
             }
 
-            bool success = true;
-
-            if (success)
-            {
-                WriteToFile(messageBody);
-                await session.CompleteAsync(message.SystemProperties.LockToken);
-                MessageList.Add($"Message completed success");
-            }
+            ///TODO - Process Message
+            
+            WriteToFile(messageBody);
+            await session.CompleteAsync(message.SystemProperties.LockToken);
+            MessageList.Add($"Message completed success");
 
             var taskStatus = (JobState)Enum.Parse(typeof(JobState), orderTask.JobState);
 
