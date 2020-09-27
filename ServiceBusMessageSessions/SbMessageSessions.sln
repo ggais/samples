@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68383A54-D7D0-48EB-BAC6-D3CAC8AD038F}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\LogOrder.ps1 = Scripts\LogOrder.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SbMessageSessionSenderConsole", "src\SbMessageSessionSender\SbMessageSessionSenderConsole.csproj", "{0742966A-AE5A-44DC-839E-A221C2D1AF75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SbMessageReceiverConsole", "src\SbMessageSessionReceiver\SbMessageReceiverConsole.csproj", "{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0742966A-AE5A-44DC-839E-A221C2D1AF75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0742966A-AE5A-44DC-839E-A221C2D1AF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0742966A-AE5A-44DC-839E-A221C2D1AF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0742966A-AE5A-44DC-839E-A221C2D1AF75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {848933D1-DF40-4576-9E5D-B6DF93626FDF}
+	EndGlobalSection
+EndGlobal
