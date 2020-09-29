@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.InteropExtensions;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.InteropExtensions;
-using Newtonsoft.Json;
 
 namespace SbMessageSessionsConsoleApp
 {
@@ -18,11 +18,18 @@ namespace SbMessageSessionsConsoleApp
         private SubscriptionClient subscriptionClient;
         private string serviceBusConnectionString;
         public List<string> MessageList { get; private set; }
-        string filePath;
+        private string filePath;
 
         public ServiceBusProcessor(string sbConnString, string instanceGuid)
         {
             serviceBusConnectionString = sbConnString;
+
+            var fileDir = filePath = Path.Combine(Environment.CurrentDirectory, "Processed");
+            if (!Directory.Exists(fileDir))
+            {
+                Directory.CreateDirectory(fileDir);
+            }
+
             filePath = Path.Combine(Environment.CurrentDirectory, "Processed", $"{instanceGuid}.txt");
             if (!File.Exists(filePath))
             {
@@ -35,12 +42,12 @@ namespace SbMessageSessionsConsoleApp
             var sessionHandlerOptions = new SessionHandlerOptions(e => this.LogMessageHandlerException(e))
             {
                 MessageWaitTimeout = TimeSpan.FromSeconds(30 * 5),
-                MaxConcurrentSessions = 10,
+                MaxConcurrentSessions = 2,
                 AutoComplete = false
             };
 
-            this.subscriptionClient = new SubscriptionClient(serviceBusConnectionString, TopicName, SubscriptionName, ReceiveMode.PeekLock);
-            this.subscriptionClient.RegisterSessionHandler(MessageSessionHandlerAsync, sessionHandlerOptions);
+            subscriptionClient = new SubscriptionClient(serviceBusConnectionString, TopicName, SubscriptionName, ReceiveMode.PeekLock);
+            subscriptionClient.RegisterSessionHandler(MessageSessionHandlerAsync, sessionHandlerOptions);
         }
 
         public async Task MessageSessionHandlerAsync(IMessageSession session, Message message, CancellationToken cancellationToken)
@@ -95,7 +102,7 @@ namespace SbMessageSessionsConsoleApp
             }
 
             ///TODO - Process Message
-            
+
             WriteToFile(messageBody);
             await session.CompleteAsync(message.SystemProperties.LockToken);
             MessageList.Add($"Message completed success");
