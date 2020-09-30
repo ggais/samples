@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DFCAB711-D3CE-459A-AAFD-0B6C2D62809E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SbMessageSessionsConsoleApp</RootNamespace>
-    <AssemblyName>SbMessageSessionsConsoleApp</AssemblyName>
+    <RootNamespace>SbMessageReceiverConsole</RootNamespace>
+    <AssemblyName>SbMessageReceiverConsole</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

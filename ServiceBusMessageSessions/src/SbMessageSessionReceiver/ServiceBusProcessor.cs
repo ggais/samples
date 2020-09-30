@@ -12,7 +12,7 @@ namespace SbMessageSessionsConsoleApp
 {
     public class ServiceBusProcessor : IDisposable
     {
-        private const string TopicName = "Orders";
+        private const string TopicName = "orders";
         private const string SubscriptionName = "OrderTask";
 
         private SubscriptionClient subscriptionClient;
@@ -52,11 +52,10 @@ namespace SbMessageSessionsConsoleApp
 
         public async Task MessageSessionHandlerAsync(IMessageSession session, Message message, CancellationToken cancellationToken)
         {
-            MessageList = new List<string>();
-
             if (message == null)
             {
-                MessageList.Add("Message is null");
+                LogMessage("Message is null");
+
                 await session.CompleteAsync(message.SystemProperties.LockToken);
                 LogMessages();
                 return;
@@ -76,28 +75,33 @@ namespace SbMessageSessionsConsoleApp
 
             if (string.IsNullOrWhiteSpace(messageBody))
             {
-                MessageList.Add("Message Body is null");
+                LogMessage("Message Body is null");
                 await session.CompleteAsync(message.SystemProperties.LockToken);
-                LogMessages();
+
                 return;
             }
-
-            MessageList.Add($"MessageId - {message.MessageId}; SessionId - {session.SessionId}");
 
             OrderTask orderTask;
 
             try
             {
-                MessageList.Add(messageBody);
+                LogMessage(messageBody);
                 orderTask = JsonConvert.DeserializeObject<OrderTask>(messageBody);
+
+                if (orderTask.Index == "Start")
+                {
+                    Console.Clear();
+                }
+
+                LogMessage($"MessageId - {message.MessageId}; SessionId - {session.SessionId}");
             }
             catch (Exception ex)
             {
-                MessageList.Add($"Invalid Json. {ex.Message}");
+                LogMessage($"Invalid Json. {ex.Message}");
                 await session.CompleteAsync(message.SystemProperties.LockToken);
 
-                MessageList.Add($"Message completed with failure due to invalid json");
-                LogMessages();
+                LogMessage($"Message completed with failure due to invalid json");
+
                 return;
             }
 
@@ -105,7 +109,7 @@ namespace SbMessageSessionsConsoleApp
 
             WriteToFile(messageBody);
             await session.CompleteAsync(message.SystemProperties.LockToken);
-            MessageList.Add($"Message completed success");
+            LogMessage($"Message completed success");
 
             var taskStatus = (JobState)Enum.Parse(typeof(JobState), orderTask.JobState);
 
@@ -113,23 +117,26 @@ namespace SbMessageSessionsConsoleApp
             {
                 if (!session.IsClosedOrClosing)
                 {
-                    MessageList.Add($"Message session closed");
+                    LogMessage($"Message session closed");
                     await session.CloseAsync();
                 }
             }
-
-            LogMessages();
         }
 
         public void WriteToFile(string contents)
         {
-            File.AppendAllText(filePath, contents);
+            //File.AppendAllText(filePath, contents);
         }
 
         private Task LogMessageHandlerException(ExceptionReceivedEventArgs e)
         {
-            MessageList.Add($"{nameof(LogMessageHandlerException)} - ClientId: {e.ExceptionReceivedContext.ClientId}; Exception: {e.Exception.Message}");
+            LogMessage($"{nameof(LogMessageHandlerException)} - ClientId: {e.ExceptionReceivedContext.ClientId}; Exception: {e.Exception.Message}");
             return Task.CompletedTask;
+        }
+
+        public void LogMessage(string message)
+        {
+            Console.WriteLine(message);
         }
 
         public void LogMessages()

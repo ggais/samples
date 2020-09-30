@@ -6,7 +6,6 @@ namespace SbMessageSessionsConsoleApp
 {
     internal class Program
     {
-        
         private static void Main(string[] args)
         {
             var instanceGuid = Guid.NewGuid().ToString();
@@ -21,18 +20,22 @@ namespace SbMessageSessionsConsoleApp
         private static void SetupServiceBusReceiver(string instanceGuid)
         {
             Console.WriteLine("Service Bus - Setup");
-            ServiceBusProcessor processor = new ServiceBusProcessor(GetConnectionString(), instanceGuid);
+            var processor = new ServiceBusProcessor(GetConnectionString(), instanceGuid);
             processor.Initilaize();
-
-            while (1 == 1)
-            {
-                Thread.Sleep(20000);
-            }
+            KeepRunning();
         }
 
         private static string GetConnectionString()
         {
             return ConfigurationManager.AppSettings["ServiceBusConnectionString"];
+        }
+
+        private static void KeepRunning()
+        {
+            while (1 == 1)
+            {
+                Thread.Sleep(20000);
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SbMessageSessionsConsoleApp
         private static TopicClient topicClient = null;
         private static string sessionId = null;
         private static bool serviceBusTopicEnabled = true;
-        public const string TopicName = "Orders";
+        public const string TopicName = "orders";
         public const string SubscriptionName = "OrderTask";
 
         private static void Main(string[] args)
@@ -44,7 +44,7 @@ namespace SbMessageSessionsConsoleApp
         {
             SetupServiceBusTopic();
 
-            string taskId = ReadStringFromConsole("Enter the TaskId: ");
+            string taskId = string.Empty;  //ReadStringFromConsole("Enter the TaskId: ");
             int messageStartFrom = ReadIntFromConsole("Enter the value for Start Index: ");
             int messageCount = ReadIntFromConsole("Enter the total count of messages to log: ");
             int messageDelayInMilliseconds = ReadIntFromConsole("Enter delay between messages in milliseconds: ");
@@ -67,13 +67,15 @@ namespace SbMessageSessionsConsoleApp
         private static void SendServiceBusMessages(string taskId, int startCount = 1, int messageCount = 10, double messageTimeSpanInMs = 1)
         {
             sessionId = Guid.NewGuid().ToString();
+            Console.WriteLine($"SessionId: {sessionId}");
             var responseMessagePath = Path.Combine(Environment.CurrentDirectory, "Content", "OrderTask.json");
             var responseMessageContent = File.ReadAllText(responseMessagePath);
 
-            SendServiceBusMessage(GetMessage(responseMessageContent, $"Count: {messageCount}", taskId, JobState.RUNNING));
+            SendServiceBusMessage(GetMessage(responseMessageContent, $"Start", taskId, JobState.RUNNING));
 
             for (int i = startCount; i < startCount + messageCount; i++)
             {
+                Console.WriteLine($"Index: {i}");
                 SendServiceBusMessage(GetMessage(responseMessageContent, $"{i}", taskId, JobState.RUNNING));
 
                 if (messageTimeSpanInMs > 0)
@@ -98,7 +100,7 @@ namespace SbMessageSessionsConsoleApp
             }
 
             //var payload = "{'OrderId':12345,'ItemId':140,'JobState':'InProgess'}";
-            var orderItem = JsonConvert.DeserializeObject<OrderTask>(content);
+            //var orderItem = JsonConvert.DeserializeObject<OrderTask>(content);
 
             var message = new Message(Encoding.UTF8.GetBytes(content));
             message.SessionId = sessionId; //orderItem.OrderId.ToString();
