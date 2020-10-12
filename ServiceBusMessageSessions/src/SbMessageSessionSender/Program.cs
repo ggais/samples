@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Azure.ServiceBus;
+using System;
 using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Microsoft.Azure.ServiceBus;
-using Newtonsoft.Json;
 
 namespace SbMessageSessionsConsoleApp
 {
@@ -45,7 +44,7 @@ namespace SbMessageSessionsConsoleApp
             SetupServiceBusTopic();
 
             string taskId = string.Empty;  //ReadStringFromConsole("Enter the TaskId: ");
-            int messageStartFrom = ReadIntFromConsole("Enter the value for Start Index: ");
+            int messageStartFrom = 1;  //ReadIntFromConsole("Enter the value for Start Index: ");
             int messageCount = ReadIntFromConsole("Enter the total count of messages to log: ");
             int messageDelayInMilliseconds = ReadIntFromConsole("Enter delay between messages in milliseconds: ");
 
@@ -99,11 +98,8 @@ namespace SbMessageSessionsConsoleApp
                 return;
             }
 
-            //var payload = "{'OrderId':12345,'ItemId':140,'JobState':'InProgess'}";
-            //var orderItem = JsonConvert.DeserializeObject<OrderTask>(content);
-
             var message = new Message(Encoding.UTF8.GetBytes(content));
-            message.SessionId = sessionId; //orderItem.OrderId.ToString();
+            message.SessionId = sessionId;
             message.UserProperties["SubscriberName"] = SubscriptionName;
 
             topicClient.SendAsync(message).ConfigureAwait(false).GetAwaiter().GetResult();

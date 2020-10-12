@@ -70,6 +70,7 @@ namespace SbMessageSessionsConsoleApp
 
             if (string.IsNullOrWhiteSpace(messageBody))
             {
+                // If the message was sent using WindowsAzure.ServiceBus Sdk, read it using InteropExtensions
                 messageBody = message.GetBody<string>();
             }
 
